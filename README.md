@@ -1,6 +1,6 @@
-###                                             npProject
+#                                             npProject
 
-# Objectif
+## Objectif
 
   In this project I have for objectif to create a functional news web site with :
 
@@ -10,13 +10,13 @@
     - Javascript
     - html
     - css
-  -API
-    -[Google News API](https://gnews.io/)
+  - API
+    - [Google News API](https://gnews.io/)
 
-# The color palette for this project
+## The color palette for this project
 
-    ![color palette](/views/img/palette.png)
+    ![color palette](/views/img/palette.png "color palette")
 
-# Basic display I am heading form
+## Basic display I am heading form
 
-    ![web site display](/views/img/firstDisplayIdea.png)
+    ![web site display](/views/img/firstDisplayIdea.png "web site display")
