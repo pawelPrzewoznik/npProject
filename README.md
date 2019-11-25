@@ -15,8 +15,8 @@
 
 ## The color palette for this project
 
-    ![color palette](./views/img/palette.png "color palette")
+    <img src="./views/img/palette.png" />
 
 ## Basic display I am heading form
 
-    ![web site display](./views/img/firstDisplayIdea.png "web site display")
+    <img src="./views/img/firstDisplayIdea.png" />
