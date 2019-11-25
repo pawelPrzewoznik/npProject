@@ -19,7 +19,7 @@
 
 <img src="./views/img/palette.png" style="width:30%;">
 
-## Basic display I am heading form
+## Basic display I am heading for
 
   The display
 
