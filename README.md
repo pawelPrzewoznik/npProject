@@ -17,10 +17,10 @@
 
   The color palette
 
-    ![color palette](./views/img/palette.png "color palette")
+<img src="./views/img/palette.png" style="width:30%;">
 
 ## Basic display I am heading form
 
   The display
 
-    ![web site display](./views/img/firstDisplayIdea.png "web site display")
+<img src="./views/img/firstDisplayIdea.png" style="width:30%;">
