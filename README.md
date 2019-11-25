@@ -5,13 +5,13 @@
   In this project I have for objectif to create a functional news website with :
 
   - Backend
-    - Node.js
+    - Node.js (Modules: express, ejs)
   - Frontend
     - Javascript
     - html
     - css
   - API
-    - [Google News API](https://gnews.io/)
+    - [News API](https://newsapi.org/)
 
 ## The color palette for this project
 
