@@ -24,3 +24,9 @@
   The display
 
 <img src="./views/img/firstDisplayIdea.png" style="width:30%;">
+
+## What the database will look like
+
+  The database
+
+<img src="./views/img/db.png" style="width:30%;">
