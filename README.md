@@ -5,8 +5,9 @@
   In this project I have for objectif to create a functional news website with :
 
   - Backend
-    - Node.js (Modules: express, ejs)
+    - Node.js (Dependencies: express, ejs, mongoose, body-parser, newsapi)
   - Frontend
+    - Bootstrap
     - Javascript
     - html
     - css

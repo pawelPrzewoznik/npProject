@@ -1,0 +1,35 @@
+<%- include('./navbar.ejs') -%>
+  <main class="ml-5 mr-5" >
+
+    <div class="container-fluid">
+      <div class="row justify-content-center ml-5 pl-4">
+        <div class="col">
+          <div class="btn-group">
+            <% for (var i = 0; i < categories.length; i++) { %>
+            <a href="http://localhost:3000/<%= lang %><%= categories[i] %>"><button type="button" class="btn btn-primary" ><%= categories[i] %></button></a>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid" style="overflow-y: auto; overscroll-behavior-y: contain; scroll-snap-type: y mandatory;">
+
+      <div class="row justify-content-center">
+
+        <% for (var i = 0; i < headlines.length; i++) { %>
+        <div class="card pl-0 pr-0 m-3 col-md-5 col-ms-3" style="background-color:#0A2D73; color: white;">
+          <img src='<%= headlines[i].urlToImage %>' class="card-img-top img-fluid" alt="Article image">
+          <div class="card-body" >
+            <h5 class="card-title"><%= headlines[i].title %></h5>
+            <p class="card-text"><%= headlines[i].description %></p>
+            <a href='<%= headlines[i].url %>' class="btn btn-primary">Go to article</a>
+          </div>
+        </div>
+        <% } %>
+
+      </div>
+    </div>
+
+  </main>
+<%- include('./footer.ejs') -%>

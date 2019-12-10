@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Register</title>
+  </head>
+  <body>
+    <%- include('./navbar.ejs') -%>
+
+    <div class="container">
+      <div class="row">
+        <form class="col" style="color:white;" method="post">
+          <div class="form-group">
+            <label for="Username">Username</label>
+            <input type="name" name="username" class="form-control" id="Username" placeholder="Enter username">
+          </div>
+          <div class="form-group">
+            <label for="Email1">Email address</label>
+            <input type="email" name="email" class="form-control" id="Email1" aria-describedby="emailHelp" placeholder="Enter email">
+          </div>
+          <div class="form-group">
+            <label for="Password1">Enter your password</label>
+            <input type="password" name="password" class="form-control" id="Password1" placeholder="Password">
+            <span class="matching"></span>
+          </div>
+          <div class="form-group">
+            <label for="Password2">Confirm your password</label>
+            <input type="password" class="form-control" id="Password2" placeholder="Password">
+            <span class="matching"></span>
+          </div>
+          <button type="submit" class="btn btn-primary" id="submit" disabled>Submit</button>
+        </form>
+        <% if (failRegister) { %>
+          <span>Something went wrong, see error => <%= error %></span>
+        <% } %>
+      </div>
+    </div>
+
+    <%- include('./footer.ejs') -%>
+  </body>
+
+  <script>
+    var password = document.querySelector('#Password1'),
+        verifyPassword = document.querySelector('#Password2'),
+        submit = document.querySelector('#submit'),
+        matching = document.querySelectorAll('.matching')
+
+    verifyPassword.addEventListener('keyup', checkPassword)
+    password.addEventListener('keyup', checkPassword)
+
+    function checkPassword () {
+      if (password.value !== '' || verifyPassword.value !== '') {
+        if (password.value !== verifyPassword.value) {
+          submit.setAttribute('disabled', 'disabled')
+          matching.forEach( function(elemt) {
+            elemt.innerHTML = 'not matching'
+            elemt.style.color = '#CC8A74'
+          })
+        } else {
+          submit.removeAttribute('disabled')
+          matching.forEach( function(elemt) {
+            elemt.innerHTML = 'matching'
+            elemt.style.color = '#89B366'
+          })
+        }
+      }
+    }
+  </script>
+</html>
