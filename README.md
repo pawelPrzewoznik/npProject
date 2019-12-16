@@ -5,7 +5,7 @@
   In this project I have for objectif to create a functional news website with :
 
   - Backend
-    - Node.js (Dependencies: express, ejs, mongoose, body-parser, newsapi)
+    - Node.js (Dependencies: express, ejs, mongoose, mongoose-unique-validator, body-parser, newsapi, dotenv, jsonwebtoken, nodemon, simplecrypt)
   - Frontend
     - Bootstrap
     - Javascript

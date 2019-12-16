@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
@@ -9,7 +10,7 @@ const app = express()
 
 app.set('view engine', 'ejs')
 
-mongoose.connect('mongodb+srv://Pawel:root@cluster0-g16d5.mongodb.net/News?retryWrites=true&w=majority', {
+mongoose.connect(process.env.DB_CONNECT, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })

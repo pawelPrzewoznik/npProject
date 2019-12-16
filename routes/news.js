@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 
 const ctrlNews = require('../controllers/news')
+// const auth = require('../middleware/auth')
 
 router.get('/en', ctrlNews.topEn)
 

@@ -1,6 +1,6 @@
 // API query
 const NewsAPI = require('newsapi')
-const newsapi = new NewsAPI('f939c75d3fb04a0caaf5d41983cd8f75')
+const newsapi = new NewsAPI(process.env.API_KEY)
 
 const en = ['Business', 'Entertainment', 'Health', 'Science', 'Sports', 'Technology']
 const fr = ['Business', 'Divertissement', 'Sante', 'Science', 'Sports', 'Technologie']

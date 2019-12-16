@@ -29,10 +29,13 @@
             <span class="matching"></span>
           </div>
           <button type="submit" class="btn btn-primary" id="submit" disabled>Submit</button>
+          <% if (failRegister) { %>
+            <span>Something went wrong, see error => <%= error %></span>
+          <% } %>
+          <% if (typeof wrongEmail === 'string') { %>
+            <span><%= wrongEmail %></span>
+          <% } %>
         </form>
-        <% if (failRegister) { %>
-          <span>Something went wrong, see error => <%= error %></span>
-        <% } %>
       </div>
     </div>
 

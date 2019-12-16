@@ -1,8 +1,8 @@
 const simplecrypt = require('simplecrypt')
 const jwt = require('jsonwebtoken')
 const sc = simplecrypt(
-  { password: 'e08f6c21812492f8d6c280f1637f0a04f51d08114e722e1f518e99fa963671cc' },
-  { salt: 'b067eaf24d0b4476cbd4439e1e99c4f83d1aa073c92c2b350fccb1fac21d1cc6' }
+  { password: process.env.PASSWORD_CRYPT },
+  { salt: process.env.SALT_CRYPT }
 )
 
 const User = require('../models/users')
@@ -16,6 +16,13 @@ exports.pageRegister = (req, res, next) => {
 }
 
 exports.signup = (req, res, next) => {
+  User.findOne({ email: req.body.email })
+    .then(user => {
+      if (user) {
+        return res.status(500).render('register', ({ failRegister: false, wrongEmail: 'Email is already used' }))
+      }
+    })
+    .catch(error => res.status(500).render('register', ({ failRegister: true, error: error })))
   const hash = sc.encrypt(req.body.password)
   // Ajout d'un nouvel user
   const user = new User({
@@ -44,7 +51,7 @@ exports.login = (req, res, next) => {
         return res.status(400).render('login', ({ fromRegister: false, failLogin: 'Wrong password' }))
       }
       // Si le mdp est correct envoie l'id et un token de connexion au front
-      res.status(200).redirect('http://localhost:3000')
+      res.status(200)
         .json({
           userId: user._id,
           token: jwt.sign(
