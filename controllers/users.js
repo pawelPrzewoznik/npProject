@@ -45,21 +45,20 @@ exports.login = (req, res, next) => {
       if (!user) {
         return res.status(404).render('login', ({ fromRegister: false, failLogin: 'User does not exist' }))
       }
-      // Si user est true on compare les mdp avec bcrypt
+      // Si user est true on vérifie le mdp
       var password = sc.decrypt(user.password)
       if (password !== req.body.password) {
         return res.status(400).render('login', ({ fromRegister: false, failLogin: 'Wrong password' }))
       }
       // Si le mdp est correct envoie l'id et un token de connexion au front
-      res.status(200)
-        .json({
-          userId: user._id,
-          token: jwt.sign(
-            { userId: user._id },
-            'RANDOM_TOKEN_SECRET',
-            { expiresIn: '24h' }
-          )
-        })
+      res.status(200).json({
+        userId: user._id,
+        token: jwt.sign(
+          { userId: user._id },
+          process.env.JWT_CRYPT_TOKEN,
+          { expiresIn: '24h' }
+        )
+      })
     })
     .catch(error => res.status(500).json({ error }))
 }
