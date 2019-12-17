@@ -20,8 +20,8 @@ exports.pageSettings = (req, res, next) => {
       .then(user => {
         if (user) {
           if (user.status === 2) {
-            console.log(getAll() + '2')
-            return res.render('settings.ejs', ({ status: user.status, adminInfo: getAll(), connected: true, username: user.username, userEmail: user.email }))
+            var all = getAll()
+            return res.render('settings.ejs', ({ status: user.status, adminInfo: all, connected: true, username: user.username, userEmail: user.email }))
           } else if (user.status === 1) {
             return res.render('settings.ejs', ({ status: user.status, connected: true, username: user.username, userEmail: user.email }))
           }
