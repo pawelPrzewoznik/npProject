@@ -1,5 +1,4 @@
 const simplecrypt = require('simplecrypt')
-const jwt = require('jsonwebtoken')
 const sc = simplecrypt(
   { password: process.env.PASSWORD_CRYPT },
   { salt: process.env.SALT_CRYPT }
@@ -8,21 +7,46 @@ const sc = simplecrypt(
 const User = require('../models/users')
 
 exports.pageLogin = (req, res, next) => {
-  return res.render('login', ({ fromRegister: false, failLogin: '' }))
+  return res.render('login', ({ fromRegister: false, failLogin: '', connected: false, logOk: false }))
 }
 
 exports.pageRegister = (req, res, next) => {
-  return res.render('register', ({ failRegister: false }))
+  return res.render('register', ({ failRegister: false, connected: false }))
+}
+
+exports.pageSettings = (req, res, next) => {
+  if (req.session) {
+    User.findOne({ _id: req.session.user_id })
+      .then(user => {
+        if (user) {
+          if (user.status === 2) {
+            console.log(getAll() + '2')
+            return res.render('settings.ejs', ({ status: user.status, adminInfo: getAll(), connected: true, username: user.username, userEmail: user.email }))
+          } else if (user.status === 1) {
+            return res.render('settings.ejs', ({ status: user.status, connected: true, username: user.username, userEmail: user.email }))
+          }
+        }
+      })
+      .catch(error => res.render('login',
+        ({ fromRegister: false, failLogin: 'Error to get to settings ' + error, connected: false, logOk: false })))
+  } else {
+    return res.render('login', ({ fromRegister: false, failLogin: 'You need to be connected to get to your settings', connected: false, logOk: false }))
+  }
+}
+async function getAll () {
+  var users = await User.find({})
+  return users
 }
 
 exports.signup = (req, res, next) => {
   User.findOne({ email: req.body.email })
     .then(user => {
       if (user) {
-        return res.status(500).render('register', ({ failRegister: false, wrongEmail: 'Email is already used' }))
+        return res.status(500).render('register',
+          ({ failRegister: false, wrongEmail: 'Email is already used', connected: false }))
       }
     })
-    .catch(error => res.status(500).render('register', ({ failRegister: true, error: error })))
+    .catch(error => res.status(500).render('register', ({ failRegister: true, error: error, connected: false })))
   const hash = sc.encrypt(req.body.password)
   // Ajout d'un nouvel user
   const user = new User({
@@ -33,8 +57,8 @@ exports.signup = (req, res, next) => {
   })
   // Sauvegarde de l'user dans la bd
   user.save()
-    .then(() => res.status(201).render('login', ({ fromRegister: true, failLogin: '' })))
-    .catch(error => res.status(500).render('register', ({ failRegister: true, error: error })))
+    .then(() => res.status(201).render('login', ({ fromRegister: true, failLogin: '', logOk: false, connected: false })))
+    .catch(error => res.status(500).render('register', ({ failRegister: true, error: error, connected: false })))
 }
 
 exports.login = (req, res, next) => {
@@ -43,22 +67,34 @@ exports.login = (req, res, next) => {
     .then(user => {
       // Si pas d'Utilisateur return une erreure
       if (!user) {
-        return res.status(404).render('login', ({ fromRegister: false, failLogin: 'User does not exist' }))
+        return res.status(404).render('login',
+          ({ fromRegister: false, failLogin: 'User does not exist', logOk: false, connected: false }))
       }
       // Si user est true on vérifie le mdp
       var password = sc.decrypt(user.password)
       if (password !== req.body.password) {
-        return res.status(400).render('login', ({ fromRegister: false, failLogin: 'Wrong password' }))
+        return res.status(400).render('login',
+          ({ fromRegister: false, failLogin: 'Wrong password', logOk: false, connected: false }))
       }
-      // Si le mdp est correct envoie l'id et un token de connexion au front
-      res.status(200).json({
-        userId: user._id,
-        token: jwt.sign(
-          { userId: user._id },
-          process.env.JWT_CRYPT_TOKEN,
-          { expiresIn: '24h' }
-        )
-      })
+      // Si le mdp est correct enregistrement des info dans la session et redirection vers une page de connexion confirmée
+      req.session.user_id = user._id
+      req.session.username = user.username
+      req.session.user_status = user.status
+      req.session.userEmail = user.email
+      console.log(req.session)
+      res.render('login', ({ fromRegister: false, logOk: true, connected: true }))
     })
     .catch(error => res.status(500).json({ error }))
+}
+
+exports.logout = (req, res, next) => {
+  if (req.session) {
+    req.session.destroy(function (err) {
+      if (err) {
+        return next(err)
+      } else {
+        return res.redirect('/en')
+      }
+    })
+  }
 }

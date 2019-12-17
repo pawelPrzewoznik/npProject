@@ -5,9 +5,9 @@
     <title>Your setings</title>
   </head>
   <body>
-    <%- include('./navbar.ejs') -%>
+    <%- include('./navbar.ejs', { connected: connected }) -%>
     <main class="container">
-      <% if (status == '2') { %>
+      <% if (status === 2) { %>
       <div class="row table-responsive">
         <table class="table table-hover table-dark">
           <thead>
@@ -34,16 +34,15 @@
           </tbody>
         </table>
       </div>
-      <% } if (status == '1') { %>
+      <% } if (status === 1) { %>
       <div class="row">
-
+        <%= username %>
       </div>
       <div class="row">
-
+        <%= userEmail %>
       </div>
       <% } %>
     </main>
-    <h1>test <%= test %></h1>
 
     <%- include('./footer.ejs') -%>
   </body>

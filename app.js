@@ -1,6 +1,8 @@
 require('dotenv').config()
 const express = require('express')
 const bodyParser = require('body-parser')
+const cookieParser = require('cookie-parser')
+const session = require('express-session')
 const mongoose = require('mongoose')
 
 const newsRoute = require('./routes/news')
@@ -9,6 +11,9 @@ const userRoute = require('./routes/users')
 const app = express()
 
 app.set('view engine', 'ejs')
+
+app.use(cookieParser())
+app.use(session({ secret: 'sssssshhhhhh' }))
 
 mongoose.connect(process.env.DB_CONNECT, {
   useNewUrlParser: true,

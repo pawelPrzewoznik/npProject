@@ -9,4 +9,8 @@ router.get('/login', ctrlUser.pageLogin)
 router.post('/register', ctrlUser.signup)
 router.get('/register', ctrlUser.pageRegister)
 
+router.get('/logout', ctrlUser.logout)
+
+router.get('/settings', ctrlUser.pageSettings)
+
 module.exports = router

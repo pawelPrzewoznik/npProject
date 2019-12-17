@@ -5,10 +5,11 @@
     <title>Login</title>
   </head>
   <body>
-    <%- include('./navbar.ejs') -%>
+    <%- include('./navbar.ejs', { connected: connected }) -%>
 
     <div class="container mt-5 mb-5">
       <div class="row">
+        <% if (logOk !== true) { %>
         <form class="col" style="color:white;" method="post" action="http://localhost:3000/auth/login">
           <div class="form-group">
             <label for="exampleInputEmail1">Email address</label>
@@ -26,6 +27,14 @@
           <% } %>
           <button type="submit" class="btn btn-primary">Submit</button>
         </form>
+        <% } else { %>
+          <div class="alert alert-success" role="alert">
+            <h4 class="alert-heading">Well done!</h4>
+            <p>You are now connected ! Feel free to comment the latest news on our website !</p>
+            <hr>
+            <a href="http://localhost:3000/en">Get back to the content !</a>
+          </div>
+        <% } %>
       </div>
     </div>
 
