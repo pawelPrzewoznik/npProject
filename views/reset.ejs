@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Reset your password !</title>
+  </head>
+  <body>
+    <%- include('./navbar.ejs', { connected: connected }) -%>
+
+    <div class="container mb-5 mt-5 pt-5 pb-5" style="color:white">
+    <% if (!connected) { %>
+      <h3>Enter your email and we will send you a new password for your account</h3>
+      <form method="post">
+        <div class="form-group">
+          <label for="email1">Email address :</label>
+          <input name="email" type="email" class="form-control" id="email" >
+        </div>
+        <% if (message) { %>
+          <p style="color:#CC8A74">Wrong email</p>
+        <% } %>
+        <button type="submit" class="btn btn-primary">Reset your password</button>
+      </form>
+    <% } else { %>
+      <h2>You are already connected !</h2>
+      <p>You can change your password in your account page.</p>
+    <% } %>
+    </div>
+    <%- include('./footer.ejs') -%>
+  </body>
+</html>

@@ -1,4 +1,5 @@
 const simplecrypt = require('simplecrypt')
+const nodemailer = require('nodemailer')
 const sc = simplecrypt(
   { password: process.env.PASSWORD_CRYPT },
   { salt: process.env.SALT_CRYPT }
@@ -17,10 +18,10 @@ exports.pageRegister = (req, res, next) => {
 exports.pageSettings = (req, res, next) => {
   if (req.session) {
     User.findOne({ _id: req.session.user_id })
-      .then(user => {
+      .then(async user => {
         if (user) {
           if (user.status === 2) {
-            var all = getAll()
+            var all = await getAll()
             return res.render('settings.ejs', ({ status: user.status, adminInfo: all, connected: true, username: user.username, userEmail: user.email }))
           } else if (user.status === 1) {
             return res.render('settings.ejs', ({ status: user.status, connected: true, username: user.username, userEmail: user.email }))
@@ -32,10 +33,6 @@ exports.pageSettings = (req, res, next) => {
   } else {
     return res.render('login', ({ fromRegister: false, failLogin: 'You need to be connected to get to your settings', connected: false, logOk: false }))
   }
-}
-async function getAll () {
-  var users = await User.find({})
-  return users
 }
 
 exports.signup = (req, res, next) => {
@@ -81,7 +78,7 @@ exports.login = (req, res, next) => {
       req.session.username = user.username
       req.session.user_status = user.status
       req.session.userEmail = user.email
-      console.log(req.session)
+      req.session.connected = true
       res.render('login', ({ fromRegister: false, logOk: true, connected: true }))
     })
     .catch(error => res.status(500).json({ error }))
@@ -97,4 +94,103 @@ exports.logout = (req, res, next) => {
       }
     })
   }
+}
+
+exports.usernameUpdate = (req, res, next) => {
+  if (req.session) {
+    User.updateOne({ _id: req.session.user_id }, { username: req.body.username })
+      .then(() => res.redirect('http://localhost:3000/auth/settings'))
+      .catch(error => res.json({ error }))
+  } else {
+    return res.render('login', ({ fromRegister: false, failLogin: 'You need to be connected to get there', connected: false, logOk: false }))
+  }
+}
+
+exports.emailUpdate = (req, res, next) => {
+  if (req.session) {
+    User.findOne({ email: req.body.newEmail })
+      .then(user => {
+        if (!user) {
+          User.updateOne({ _id: req.session.user_id }, { email: req.body.newEmail })
+            .then(() => res.redirect('http://localhost:3000/auth/settings'))
+            .catch(error => res.json({ error }))
+        } else {
+          res.redirect('http://localhost:3000/auth/settings')
+        }
+      })
+      .catch(error => res.json({ error }))
+  } else {
+    return res.render('login', ({ fromRegister: false, failLogin: 'You need to be connected to get there', connected: false, logOk: false }))
+  }
+}
+
+exports.passwordUpdate = (req, res, next) => {
+  if (req.session) {
+    if (req.body.pwd === req.body.pwd2) {
+      const password = sc.encrypt(req.body.pwd)
+      User.updateOne({ _id: req.session.user_id }, { password: password })
+        .then(() => res.redirect('http://localhost:3000/auth/settings'))
+        .catch(error => res.json({ error }))
+    } else {
+      res.redirect('http://localhost:3000/auth/settings')
+    }
+  } else {
+    return res.render('login', ({ fromRegister: false, failLogin: 'You need to be connected to get there', connected: false, logOk: false }))
+  }
+}
+
+exports.resetPage = (req, res, next) => {
+  if (req.session.connected === true) {
+    res.render('reset', ({ connected: true, message: false }))
+  } else {
+    res.render('reset', ({ connected: false, message: false }))
+  }
+}
+
+exports.reset = (req, res, next) => {
+  if (req.session.connected === true) {
+    res.render('reset', ({ connected: true, message: false }))
+  } else {
+    User.findOne({ email: req.body.email })
+      .then(user => {
+        if (user) {
+          var newCode = require('crypto').randomBytes(16).toString('hex')
+          const password = sc.encrypt(newCode)
+          console.log(newCode)
+          User.updateOne({ email: req.body.email }, { password: password })
+            .then(() => {
+              var transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                  user: process.env.EMAIL,
+                  pass: process.env.EMAIL_PASSOWRD
+                }
+              })
+              var mailOption = {
+                from: process.env.EMAIL,
+                to: req.body.email,
+                subject: 'Your new password',
+                text: 'Your new password is : ' + newCode + '. \n Please change your password again once you log into your account !\n' + '        --Your friends at News Board'
+              }
+              transporter.sendMail(mailOption, function (error, info) {
+                if (error) {
+                  console.error(error)
+                } else {
+                  console.log('Email sent: ' + info.response)
+                  res.redirect('http://localhost:3000/auth/login')
+                }
+              })
+            })
+            .catch(error => res.json({ error }))
+        } else {
+          res.render('reset', ({ connected: false, message: true }))
+        }
+      })
+      .catch(error => res.json({ error }))
+  }
+}
+
+async function getAll () {
+  var users = await User.find({})
+  return users
 }

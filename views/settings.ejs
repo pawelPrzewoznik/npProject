@@ -7,43 +7,166 @@
   <body>
     <%- include('./navbar.ejs', { connected: connected }) -%>
     <main class="container">
+      <div class="row m-5 justify-content-center">
+
+      <div class="accordion col-11" id="accordionExample">
+        <!-- Username update -->
+        <div class="card">
+          <div class="card-header" id="headingOne">
+            <h2 class="mb-0">
+              <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                Your username : <%= username %>
+              </button>
+            </h2>
+          </div>
+          <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+            <div class="card-body">
+              <!-- Username update form -->
+              <form method="post" action="http://localhost:3000/auth/settings/username">
+                <div class="form-group">
+                  <label for="username">Change your username</label>
+                  <input name="username" type="text" class="form-control" id="username" placeholder="Your new username">
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </form>
+            </div>
+          </div>
+        </div>
+        <!-- Email update -->
+        <div class="card">
+          <div class="card-header" id="headingTwo">
+            <h2 class="mb-0">
+              <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                Your email address : <%= userEmail %>
+              </button>
+            </h2>
+          </div>
+          <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+            <div class="card-body">
+              <!-- Email update form -->
+              <form method="post" action="http://localhost:3000/auth/settings/newEmail">
+                <div class="form-group">
+                  <label for="email">Change your email address. (ONE email can only be use for ONE account !!!)</label>
+                  <input name="newEmail" type="email" class="form-control" id="email" placeholder="Your new email">
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </form>
+            </div>
+          </div>
+        </div>
+        <!-- Password update -->
+        <div class="card">
+          <div class="card-header" id="headingThree">
+            <h2 class="mb-0">
+              <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                Change your password
+              </button>
+            </h2>
+          </div>
+          <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+            <div class="card-body">
+              <!-- Formulaire changement mdp / Change password form -->
+              <form action="http://localhost:3000/auth/settings/newPassword" method="post">
+                <div class="form-group">
+                  <label for="pwd">Your new password</label>
+                  <input name="pwd" type="password" class="form-control" id="pwd">
+                  <span class="matching"></span>
+                </div>
+                <div class="form-group">
+                  <label for="pwd2">Verify your new password</label>
+                  <input name="pwd2" type="password" class="form-control" id="pwd2">
+                  <span class="matching"></span>
+                </div>
+                <button type="submit" class="btn btn-primary" id="submitPwd" disabled>Submit</button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
       <% if (status === 2) { %>
       <div class="row table-responsive">
-        <table class="table table-hover table-dark">
+        <h2 style="color:white">Users management :</h2>
+        <table class="table table-hover table-borderless table-dark" >
           <thead>
-            <tr>
+            <tr class=" justify-content-center">
               <th scope="col">#</th>
               <th scope="col">Username</th>
               <th scope="col">Email</th>
               <th scope="col">Status</th>
             </tr>
           </thead>
-          <tbody>
-            <% for(var i = 0; i < adminInfo.length; i++) { %>
+          <tbody >
+            <% for(var i = 0; i < adminInfo.length; i++) { console.log(adminInfo);%>
             <tr>
-              <th scope="row"><%= i %></th>
-              <td><%= adminInfo.username[i] %></td>
-              <td><%= adminInfo.email[i] %></td>
-              <% if (adminInfo.status[i] == '1') { %>
-                <td>User</td>
-              <% } else if (adminInfo.status[i] == '2'){ %>
-                <td>Admin</td>
+              <th scope="row"><%= i+1 %></th>
+              <td><%= adminInfo[i].username %></td>
+              <td><%= adminInfo[i].email %></td>
+              <% if (adminInfo[i].status == 1) { %>
+                <td>
+                  <form class"form-inline" action="" method="post">
+                    <div class="form-group mb-2">
+                      <label for="select<%= i %>">Change status</label>
+                      <select class="form-control form-control-sm" id="select<%= i %>">
+                        <option>User</option>
+                        <option>Admin</option>
+                      </select>
+                    </div>
+                    <button type="submit" class="btn btn-outline-danger">Commit</button>
+                  </form>
+                </td>
+              <% } else if (adminInfo[i].status == 2){ %>
+                <td>
+                  <form class"form-inline mx-sm-3 mb-2" action="" method="post">
+
+                    <div class="form-group">
+                      <label for="select<%= i %>">Change status</label>
+                      <select class="form-control form-control-sm" id="select<%= i %>">
+                        <option>Admin</option>
+                        <option>User</option>
+                      </select>
+                    </div>
+                    <button type="submit" class="btn btn-outline-danger">Commit</button>
+                  </form>
+                </td>
               <% } %>
             </tr>
             <% } %>
           </tbody>
         </table>
       </div>
-      <% } if (status === 1) { %>
-      <div class="row">
-        <%= username %>
-      </div>
-      <div class="row">
-        <%= userEmail %>
-      </div>
       <% } %>
     </main>
 
     <%- include('./footer.ejs') -%>
+    <script>
+      var password = document.querySelector('#pwd'),
+          verifyPassword = document.querySelector('#pwd2'),
+          submit = document.querySelector('#submitPwd'),
+          matching = document.querySelectorAll('.matching')
+
+      verifyPassword.addEventListener('keyup', checkPassword)
+      password.addEventListener('keyup', checkPassword)
+
+      function checkPassword () {
+        if (password.value !== '' || verifyPassword.value !== '') {
+          if (password.value !== verifyPassword.value) {
+            submit.setAttribute('disabled', 'disabled')
+            matching.forEach( function(elemt) {
+              elemt.innerHTML = 'not matching'
+              elemt.style.color = '#FF0000'
+            })
+          } else {
+            submit.removeAttribute('disabled')
+            matching.forEach( function(elemt) {
+              elemt.innerHTML = 'matching'
+              elemt.style.color = '#00FF00'
+            })
+          }
+        }
+      }
+    </script>
   </body>
 </html>
