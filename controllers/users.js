@@ -160,8 +160,9 @@ exports.reset = (req, res, next) => {
           User.updateOne({ email: req.body.email }, { password: password })
             .then(() => {
               var transporter = nodemailer.createTransport({
-                service: 'gmail',
+                host: 'smtp.gmail.com',
                 auth: {
+                  type: 'login',
                   user: process.env.EMAIL,
                   pass: process.env.EMAIL_PASSOWRD
                 }
@@ -174,6 +175,7 @@ exports.reset = (req, res, next) => {
               }
               transporter.sendMail(mailOption, function (error, info) {
                 if (error) {
+                  console.log(transporter.options.host)
                   console.error(error)
                 } else {
                   console.log('Email sent: ' + info.response)
