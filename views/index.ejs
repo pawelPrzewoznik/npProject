@@ -6,7 +6,7 @@
         <div class="col">
           <div class="btn-group">
             <% for (var i = 0; i < categories.length; i++) { %>
-            <a href="/<%= lang %><%= categories[i] %>"><button type="button" class="btn btn-primary"><%= categories[i] %></button></a>
+            <a href="/<%= lang %><%= categories[i] %>"><button type="button" class="btn btn-secondary"><%= categories[i] %></button></a>
             <% } %>
           </div>
         </div>
@@ -18,12 +18,12 @@
       <div class="row justify-content-center">
 
         <% for (var i = 0; i < headlines.length; i++) { %>
-        <div class="card pl-0 pr-0 m-3 col-md-5 col-ms-3" style="background-color:#115DBF; color: white;">
+        <div class="card pl-0 pr-0 m-3 col-md-5 col-ms-3" style="background-color:DarkSlateGray ; color: white;">
             <img src='<% if(headlines[i].urlToImage !== null && headlines[i].urlToImage !== 'null') { %><%= headlines[i].urlToImage %><% } else { %> https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVbY6UVeevsUNd4_-zX7-qqDn8Ew_a7qSi1JDD3MSach4C5djd&s <% } %>' class="card-img-top img-fluid" alt="Article image">
           <div class="card-body" >
             <h5 class="card-title"><%= headlines[i].title %></h5>
             <p class="card-text"><%= headlines[i].description %></p>
-            <a href='<%= headlines[i].url %>' class="btn btn-primary" target="_blank">Go to article</a>
+            <a href='<%= headlines[i].url %>' class="btn btn-secondary" target="_blank">Go to article</a>
           </div>
         </div>
         <% } %>
