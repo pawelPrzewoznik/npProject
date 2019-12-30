@@ -14,6 +14,7 @@ router.get('/en/Sports', ctrlNews.topEnSports)
 router.get('/en/Technology', ctrlNews.topEnTec)
 
 router.get('/', ctrlNews.topFr)
+router.get('/fr', ctrlNews.topFr)
 
 router.get('/Business', ctrlNews.topFrBusiness)
 router.get('/Divertissement', ctrlNews.topFrEnt)
