@@ -22,7 +22,7 @@
           <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
             <div class="card-body">
               <!-- Username update form -->
-              <form method="post" action="http://localhost:3000/auth/settings/username">
+              <form method="post" action="/auth/settings/username">
                 <div class="form-group">
                   <label for="username">Change your username</label>
                   <input name="username" type="text" class="form-control" id="username" placeholder="Your new username">
@@ -44,7 +44,7 @@
           <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
             <div class="card-body">
               <!-- Email update form -->
-              <form method="post" action="http://localhost:3000/auth/settings/newEmail">
+              <form method="post" action="/auth/settings/newEmail">
                 <div class="form-group">
                   <label for="email">Change your email address. (ONE email can only be use for ONE account !!!)</label>
                   <input name="newEmail" type="email" class="form-control" id="email" placeholder="Your new email">
@@ -66,7 +66,7 @@
           <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
             <div class="card-body">
               <!-- Formulaire changement mdp / Change password form -->
-              <form action="http://localhost:3000/auth/settings/newPassword" method="post">
+              <form action="/auth/settings/newPassword" method="post">
                 <div class="form-group">
                   <label for="pwd">Your new password</label>
                   <input name="pwd" type="password" class="form-control" id="pwd">

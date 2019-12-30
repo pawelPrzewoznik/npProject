@@ -10,7 +10,7 @@
     <div class="container mt-5 mb-5">
       <div class="row">
         <% if (logOk !== true) { %>
-        <form class="col" style="color:white;" method="post" action="http://localhost:3000/auth/login">
+        <form class="col" style="color:white;" method="post" action="/auth/login">
           <div class="form-group">
             <label for="exampleInputEmail1">Email address</label>
             <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
@@ -27,7 +27,7 @@
           <% } %>
           <button type="submit" class="btn btn-primary">Submit</button><br>
           <aside class="mt-3 mb-5">
-          <a href="http://localhost:3000/auth/reset" style="color:white;border">Forgot your password ?</a>
+          <a href="/auth/reset" style="color:white;border">Forgot your password ?</a>
           </aside>
         </form>
         <% } else { %>
@@ -35,7 +35,7 @@
             <h4 class="alert-heading">Well done!</h4>
             <p>You are now connected ! Feel free to comment the latest news on our website !</p>
             <hr>
-            <a href="http://localhost:3000/en">Get back to the content !</a>
+            <a href="/en">Get back to the content !</a>
           </div>
         <% } %>
       </div>
