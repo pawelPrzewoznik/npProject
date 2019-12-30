@@ -29,6 +29,7 @@
     "nodemailer": "^6.4.2",
     "nodemon": "^2.0.1",
     "save": "^2.4.0",
+    "serve-favicon": "^2.5.0",
     "simplecrypt": "^0.1.0"
   }
 }

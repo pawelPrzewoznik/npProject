@@ -4,12 +4,17 @@ const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const session = require('express-session')
 const mongoose = require('mongoose')
+const favicon = require('serve-favicon')
+const path = require('path')
 
 const newsRoute = require('./routes/news')
 const userRoute = require('./routes/users')
 const comRoute = require('./routes/users.js')
 
 const app = express()
+
+// favicon not functional
+app.use(favicon(path.join(__dirname, 'views', 'img', 'news2.ico')))
 
 app.set('view engine', 'ejs')
 
