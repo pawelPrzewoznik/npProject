@@ -156,7 +156,6 @@ exports.reset = (req, res, next) => {
         if (user) {
           var newCode = require('crypto').randomBytes(16).toString('hex')
           const password = sc.encrypt(newCode)
-          console.log(newCode)
           User.updateOne({ email: req.body.email }, { password: password })
             .then(() => {
               var transporter = nodemailer.createTransport({
