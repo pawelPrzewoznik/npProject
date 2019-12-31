@@ -9,7 +9,7 @@
 
     <div class="container mt-5 mb-5">
       <div class="row">
-        <form class="col" style="color:white;" method="post">
+        <form class="col" method="post">
           <div class="form-group">
             <label for="Username">Username</label>
             <input type="name" name="username" class="form-control" id="Username" placeholder="Enter username">
@@ -57,13 +57,13 @@
           submit.setAttribute('disabled', 'disabled')
           matching.forEach( function(elemt) {
             elemt.innerHTML = 'not matching'
-            elemt.style.color = '#CC8A74'
+            elemt.style.color = '#FF0000'
           })
         } else {
           submit.removeAttribute('disabled')
           matching.forEach( function(elemt) {
             elemt.innerHTML = 'matching'
-            elemt.style.color = '#89B366'
+            elemt.style.color = '#00FF00'
           })
         }
       }
