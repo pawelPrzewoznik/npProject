@@ -9,7 +9,7 @@ const path = require('path')
 
 const newsRoute = require('./routes/news')
 const userRoute = require('./routes/users')
-const comRoute = require('./routes/users.js')
+const forumRoute = require('./routes/forum')
 
 const app = express()
 
@@ -42,6 +42,6 @@ app.use(bodyParser.json())
 
 app.use('/', newsRoute)
 app.use('/auth', userRoute)
-app.use('/comments', comRoute)
+app.use('/forum', forumRoute)
 
 module.exports = app
