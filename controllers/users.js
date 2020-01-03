@@ -41,20 +41,21 @@ exports.signup = (req, res, next) => {
       if (user) {
         return res.status(500).render('register',
           ({ failRegister: false, wrongEmail: 'Email is already used', connected: false }))
+      } else {
+        const hash = sc.encrypt(req.body.password)
+        // Ajout d'un nouvel user
+        const user = new User({
+          username: req.body.username,
+          email: req.body.email,
+          password: hash,
+          status: 1
+        })
+        // Sauvegarde de l'user dans la bd
+        user.save()
+          .then(() => res.status(201).render('login', ({ fromRegister: true, failLogin: '', logOk: false, connected: false })))
+          .catch(error => res.status(500).render('register', ({ failRegister: true, error: error, connected: false })))
       }
     })
-    .catch(error => res.status(500).render('register', ({ failRegister: true, error: error, connected: false })))
-  const hash = sc.encrypt(req.body.password)
-  // Ajout d'un nouvel user
-  const user = new User({
-    username: req.body.username,
-    email: req.body.email,
-    password: hash,
-    status: 1
-  })
-  // Sauvegarde de l'user dans la bd
-  user.save()
-    .then(() => res.status(201).render('login', ({ fromRegister: true, failLogin: '', logOk: false, connected: false })))
     .catch(error => res.status(500).render('register', ({ failRegister: true, error: error, connected: false })))
 }
 
