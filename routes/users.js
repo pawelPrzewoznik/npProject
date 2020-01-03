@@ -16,6 +16,9 @@ router.post('/settings/newEmail', ctrlUser.emailUpdate)
 router.post('/settings/newPassword', ctrlUser.passwordUpdate)
 router.get('/settings', ctrlUser.pageSettings)
 
+router.post('/settings/status/:email', ctrlUser.statusUpdate)
+router.post('/settings/ban/:email', ctrlUser.ban)
+
 router.post('/reset', ctrlUser.reset)
 router.get('/reset', ctrlUser.resetPage)
 

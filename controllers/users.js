@@ -99,7 +99,7 @@ exports.logout = (req, res, next) => {
 exports.usernameUpdate = (req, res, next) => {
   if (req.session) {
     User.updateOne({ _id: req.session.user_id }, { username: req.body.username })
-      .then(() => res.redirect('http://localhost:3000/auth/settings'))
+      .then(() => res.redirect('/auth/settings'))
       .catch(error => res.json({ error }))
   } else {
     return res.render('login', ({ fromRegister: false, failLogin: 'You need to be connected to get there', connected: false, logOk: false }))
@@ -112,10 +112,10 @@ exports.emailUpdate = (req, res, next) => {
       .then(user => {
         if (!user) {
           User.updateOne({ _id: req.session.user_id }, { email: req.body.newEmail })
-            .then(() => res.redirect('http://localhost:3000/auth/settings'))
+            .then(() => res.redirect('/auth/settings'))
             .catch(error => res.json({ error }))
         } else {
-          res.redirect('http://localhost:3000/auth/settings')
+          res.redirect('/auth/settings')
         }
       })
       .catch(error => res.json({ error }))
@@ -129,10 +129,10 @@ exports.passwordUpdate = (req, res, next) => {
     if (req.body.pwd === req.body.pwd2) {
       const password = sc.encrypt(req.body.pwd)
       User.updateOne({ _id: req.session.user_id }, { password: password })
-        .then(() => res.redirect('http://localhost:3000/auth/settings'))
+        .then(() => res.redirect('/auth/settings'))
         .catch(error => res.json({ error }))
     } else {
-      res.redirect('http://localhost:3000/auth/settings')
+      res.redirect('/auth/settings')
     }
   } else {
     return res.render('login', ({ fromRegister: false, failLogin: 'You need to be connected to get there', connected: false, logOk: false }))
@@ -178,7 +178,7 @@ exports.reset = (req, res, next) => {
                   console.error(error)
                 } else {
                   console.log('Email sent: ' + info.response)
-                  res.redirect('http://localhost:3000/auth/login')
+                  res.redirect('/auth/login')
                 }
               })
             })
@@ -188,6 +188,47 @@ exports.reset = (req, res, next) => {
         }
       })
       .catch(error => res.json({ error }))
+  }
+}
+
+exports.statusUpdate = (req, res, next) => {
+  if (req.session && req.session.user_status === 2) {
+    var regex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/igm
+    var emailUser = req.params.email.match(regex)
+    User.findOne({ email: emailUser })
+      .then(user => {
+        if (user) {
+          var status = req.body.status === 'admin' ? 1 : 2
+          User.updateOne({ email: emailUser }, { status: status })
+            .then(res.redirect('/auth/settings'))
+            .catch(error => res.json({ error }))
+        } else {
+          res.redirect('/auth/settings')
+        }
+      })
+      .catch(error => res.json({ error }))
+  } else {
+    res.redirect('/auth/login')
+  }
+}
+
+exports.ban = (req, res, next) => {
+  if (req.session && req.session.user_status === 2) {
+    var regex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/igm
+    var emailUser = req.params.email.match(regex)
+    User.findOne({ email: emailUser })
+      .then(user => {
+        if (user) {
+          User.deleteOne({ email: emailUser })
+            .then(res.redirect('/auth/settings'))
+            .catch(error => res.json({ error }))
+        } else {
+          res.redirect('/auth/settings')
+        }
+      })
+      .catch(error => res.json({ error }))
+  } else {
+    res.redirect('/auth/login')
   }
 }
 

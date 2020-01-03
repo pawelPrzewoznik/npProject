@@ -99,17 +99,17 @@
             </tr>
           </thead>
           <tbody >
-            <% for(var i = 0; i < adminInfo.length; i++) { console.log(adminInfo);%>
+            <% for(var i = 0; i < adminInfo.length; i++) { %>
             <tr>
               <th scope="row"><%= i+1 %></th>
               <td><%= adminInfo[i].username %></td>
               <td><%= adminInfo[i].email %></td>
               <% if (adminInfo[i].status == 1) { %>
                 <td>
-                  <form class"form-inline" action="" method="post">
+                  <form class"form-inline" action="/auth/settings/status/<%= adminInfo[i].email %>" method="post">
                     <div class="form-group mb-2">
                       <label for="select<%= i %>">Change status</label>
-                      <select class="form-control form-control-sm" id="select<%= i %>">
+                      <select name=" status" class="form-control form-control-sm" id="select<%= i %>">
                         <option>User</option>
                         <option>Admin</option>
                       </select>
@@ -119,11 +119,11 @@
                 </td>
               <% } else if (adminInfo[i].status == 2){ %>
                 <td>
-                  <form class"form-inline mx-sm-3 mb-2" action="" method="post">
+                  <form class"form-inline mx-sm-3 mb-2" action="/auth/settings/status/<%= adminInfo[i].email %>" method="post">
 
                     <div class="form-group">
                       <label for="select<%= i %>">Change status</label>
-                      <select class="form-control form-control-sm" id="select<%= i %>">
+                      <select name=" status" class="form-control form-control-sm" id="select<%= i %>">
                         <option>Admin</option>
                         <option>User</option>
                       </select>
@@ -132,6 +132,11 @@
                   </form>
                 </td>
               <% } %>
+                <td>
+                  <form class="form-inline justify-content-center pt-4" action="/auth/settings/ban/<%= adminInfo[i].email %>" method="post">
+                    <button type="submit" class="btn btn-outline-danger">  Ban  </button>
+                  </form>
+                </td>
             </tr>
             <% } %>
           </tbody>
