@@ -144,8 +144,9 @@
       </div>
       <% } %>
     </main>
-
-    <%- include('./footer.ejs') -%>
+    <div class="fixed-bottom">
+      <%- include('./footer.ejs') -%>
+    </div>
     <script>
       var password = document.querySelector('#pwd'),
           verifyPassword = document.querySelector('#pwd2'),
