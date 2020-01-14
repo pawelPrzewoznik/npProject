@@ -19,7 +19,11 @@ app.use(favicon(path.join(__dirname, 'views', 'img', 'news2.ico')))
 app.set('view engine', 'ejs')
 
 app.use(cookieParser())
-app.use(session({ secret: 'sssssshhhhhh' }))
+app.use(session({
+  secret: 'sssssshhhhhh',
+  resave: false,
+  saveUninitialized: true
+}))
 
 mongoose.connect(process.env.DB_CONNECT, {
   useNewUrlParser: true,
