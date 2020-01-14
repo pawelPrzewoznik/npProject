@@ -1,15 +1,15 @@
 
 exports.homePage = (req, res, next) => {
-  var isConnected = false
-  if (req.body.session) {
+  let isConnected = false
+  if (req.session.user_id) {
     isConnected = true
   }
   res.render('forum', { connected: isConnected, form: false })
 }
 
 exports.newThread = (req, res, next) => {
-  var isConnected = false
-  if (req.body.session) {
+  let isConnected = false
+  if (req.session.user_id) {
     isConnected = true
     res.render('forum', { connected: isConnected, form: true })
   }
