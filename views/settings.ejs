@@ -99,7 +99,7 @@
             </tr>
           </thead>
           <tbody >
-            <% for(var i = 0; i < adminInfo.length; i++) { %>
+            <% for(let i = 0; i < adminInfo.length; i++) { %>
             <tr>
               <th scope="row"><%= i+1 %></th>
               <td><%= adminInfo[i].username %></td>
@@ -148,7 +148,7 @@
       <%- include('./footer.ejs') -%>
     </div>
     <script>
-      var password = document.querySelector('#pwd'),
+      let password = document.querySelector('#pwd'),
           verifyPassword = document.querySelector('#pwd2'),
           submit = document.querySelector('#submitPwd'),
           matching = document.querySelectorAll('.matching')

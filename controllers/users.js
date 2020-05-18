@@ -7,21 +7,21 @@ const sc = simplecrypt(
 
 const User = require('../models/users')
 
-exports.pageLogin = (req, res, next) => {
+exports.pageLogin = (req, res) => {
   return res.render('login', ({ fromRegister: false, failLogin: '', connected: false, logOk: false }))
 }
 
-exports.pageRegister = (req, res, next) => {
+exports.pageRegister = (req, res) => {
   return res.render('register', ({ failRegister: false, connected: false }))
 }
 
-exports.pageSettings = (req, res, next) => {
+exports.pageSettings = (req, res) => {
   if (req.session) {
     User.findOne({ _id: req.session.user_id })
       .then(async user => {
         if (user) {
           if (user.status === 2) {
-            var all = await getAll()
+            const all = await getAll()
             return res.render('settings.ejs', ({ status: user.status, adminInfo: all, connected: true, username: user.username, userEmail: user.email }))
           } else if (user.status === 1) {
             return res.render('settings.ejs', ({ status: user.status, connected: true, username: user.username, userEmail: user.email }))
@@ -35,7 +35,7 @@ exports.pageSettings = (req, res, next) => {
   }
 }
 
-exports.signup = (req, res, next) => {
+exports.signup = (req, res) => {
   User.findOne({ email: req.body.email })
     .then(user => {
       if (user) {
@@ -59,7 +59,7 @@ exports.signup = (req, res, next) => {
     .catch(error => res.status(500).render('register', ({ failRegister: true, error: error, connected: false })))
 }
 
-exports.login = (req, res, next) => {
+exports.login = (req, res) => {
   // Cherche l'email dans la bd
   User.findOne({ email: req.body.email })
     .then(user => {
@@ -69,7 +69,7 @@ exports.login = (req, res, next) => {
           ({ fromRegister: false, failLogin: 'User does not exist', logOk: false, connected: false }))
       }
       // Si user est true on vérifie le mdp
-      var password = sc.decrypt(user.password)
+      let password = sc.decrypt(user.password)
       if (password !== req.body.password) {
         return res.status(400).render('login',
           ({ fromRegister: false, failLogin: 'Wrong password', logOk: false, connected: false }))
@@ -85,7 +85,7 @@ exports.login = (req, res, next) => {
     .catch(error => res.status(500).json({ error }))
 }
 
-exports.logout = (req, res, next) => {
+exports.logout = (req, res) => {
   if (req.session) {
     req.session.destroy(function (err) {
       if (err) {
@@ -97,7 +97,7 @@ exports.logout = (req, res, next) => {
   }
 }
 
-exports.usernameUpdate = (req, res, next) => {
+exports.usernameUpdate = (req, res) => {
   if (req.session) {
     User.updateOne({ _id: req.session.user_id }, { username: req.body.username })
       .then(() => res.redirect('/auth/settings'))
@@ -107,7 +107,7 @@ exports.usernameUpdate = (req, res, next) => {
   }
 }
 
-exports.emailUpdate = (req, res, next) => {
+exports.emailUpdate = (req, res) => {
   if (req.session) {
     User.findOne({ email: req.body.newEmail })
       .then(user => {
@@ -125,7 +125,7 @@ exports.emailUpdate = (req, res, next) => {
   }
 }
 
-exports.passwordUpdate = (req, res, next) => {
+exports.passwordUpdate = (req, res) => {
   if (req.session) {
     if (req.body.pwd === req.body.pwd2) {
       const password = sc.encrypt(req.body.pwd)
@@ -140,7 +140,7 @@ exports.passwordUpdate = (req, res, next) => {
   }
 }
 
-exports.resetPage = (req, res, next) => {
+exports.resetPage = (req, res) => {
   if (req.session.connected === true) {
     res.render('reset', ({ connected: true, message: false }))
   } else {
@@ -148,18 +148,18 @@ exports.resetPage = (req, res, next) => {
   }
 }
 
-exports.reset = (req, res, next) => {
+exports.reset = (req, res) => {
   if (req.session.connected === true) {
     res.render('reset', ({ connected: true, message: false }))
   } else {
     User.findOne({ email: req.body.email })
       .then(user => {
         if (user) {
-          var newCode = require('crypto').randomBytes(16).toString('hex')
+          let newCode = require('crypto').randomBytes(16).toString('hex')
           const password = sc.encrypt(newCode)
           User.updateOne({ email: req.body.email }, { password: password })
             .then(() => {
-              var transporter = nodemailer.createTransport({
+              let transporter = nodemailer.createTransport({
                 host: 'smtp.gmail.com',
                 auth: {
                   type: 'login',
@@ -167,7 +167,7 @@ exports.reset = (req, res, next) => {
                   pass: process.env.EMAIL_PASSOWRD
                 }
               })
-              var mailOption = {
+              let mailOption = {
                 from: process.env.EMAIL,
                 to: req.body.email,
                 subject: 'Your new password',
@@ -192,14 +192,14 @@ exports.reset = (req, res, next) => {
   }
 }
 
-exports.statusUpdate = (req, res, next) => {
+exports.statusUpdate = (req, res) => {
   if (req.session && req.session.user_status === 2) {
-    var regex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/igm
-    var emailUser = req.params.email.match(regex)
+    const regex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/igm
+    let emailUser = req.params.email.match(regex)
     User.findOne({ email: emailUser })
       .then(user => {
         if (user) {
-          var status = req.body.status === 'admin' ? 1 : 2
+          let status = req.body.status === 'admin' ? 1 : 2
           User.updateOne({ email: emailUser }, { status: status })
             .then(res.redirect('/auth/settings'))
             .catch(error => res.json({ error }))
@@ -213,10 +213,10 @@ exports.statusUpdate = (req, res, next) => {
   }
 }
 
-exports.ban = (req, res, next) => {
+exports.ban = (req, res) => {
   if (req.session && req.session.user_status === 2) {
-    var regex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/igm
-    var emailUser = req.params.email.match(regex)
+    const regex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/igm
+    let emailUser = req.params.email.match(regex)
     User.findOne({ email: emailUser })
       .then(user => {
         if (user) {
@@ -234,6 +234,5 @@ exports.ban = (req, res, next) => {
 }
 
 async function getAll () {
-  var users = await User.find({})
-  return users
+  return await User.find({})
 }
